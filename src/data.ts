@@ -1,0 +1,14 @@
+export type Status = "Ativo" | "Em análise" | "Aprovado" | "Em atraso" | "Liquidado";
+export type Client = { id:string; nome:string; telefone:string; distrito:string; email:string; estado:Status };
+export type Loan = { id:string; clienteId:string; valor:number; saldo:number; taxa:number; estado:Status; data:string };
+export type Payment = { id:string; emprestimoId:string; valor:number; data:string; metodo:string };
+export const moeda = (n:number) => new Intl.NumberFormat("pt-MZ",{style:"currency",currency:"MZN",maximumFractionDigits:0}).format(n);
+const nomes=["Ana Macuácua","Carlos Nhantumbo","Marta Chissano","João Mavota","Celina Matola","Paulo Mabunda","Rosa Tembe","Alberto Mondlane","Sónia Mucavele","Daniel Massingue"];
+const distritos=["KaMpfumo","KaMaxakeni","KaMavota","KaMubukwana","Matola"];
+export const clientes:Client[]=Array.from({length:50},(_,i)=>({id:"CLI-"+String(i+1).padStart(4,"0"),nome:nomes[i%nomes.length],telefone:"+258 84 "+String(1000000+i*171),distrito:distritos[i%5],email:"cliente"+(i+1)+"@exemplo.test",estado:i%9===0?"Em análise":"Ativo"}));
+export const emprestimos:Loan[]=Array.from({length:120},(_,i)=>({id:"EMP-"+String(i+1).padStart(4,"0"),clienteId:clientes[i%50].id,valor:10000+(i%19)*5000,saldo:i%7===0?0:5000+(i%13)*2400,taxa:5,estado:i%7===0?"Liquidado":i%11===0?"Em atraso":i%5===0?"Em análise":i%3===0?"Aprovado":"Ativo",data:"2026-"+String(1+i%10).padStart(2,"0")+"-"+String(1+i%27).padStart(2,"0")}));
+export const pagamentos:Payment[]=Array.from({length:300},(_,i)=>({id:"PAG-"+String(i+1).padStart(4,"0"),emprestimoId:emprestimos[i%120].id,valor:1200+(i%10)*350,data:"2026-"+String(1+i%10).padStart(2,"0")+"-"+String(1+i%27).padStart(2,"0"),metodo:i%2?"M-Pesa":"Transferência"}));
+export const contratos=emprestimos.filter(x=>x.estado!=="Em análise").slice(0,80).map((x,i)=>({id:"CON-"+String(i+1).padStart(4,"0"),emprestimoId:x.id,estado:i%5===0?"Pendente":"Assinado"}));
+export const garantias=emprestimos.slice(0,60).map((x,i)=>({id:"GAR-"+String(i+1).padStart(4,"0"),emprestimoId:x.id,tipo:["Viatura","Equipamento","Imóvel","Outros"][i%4],valor:x.valor*1.4}));
+export const utilizadores=Array.from({length:10},(_,i)=>({id:"USR-"+(i+1),nome:["Administrador","Analista","Operador","Tesouraria","Jurídico"][i%5]+" "+(i+1),perfil:["Admin","Analista","Operador","Tesouraria","Jurídico"][i%5]}));
+export const nomeCliente=(id:string)=>clientes.find(c=>c.id===id)?.nome??"Desconhecido";

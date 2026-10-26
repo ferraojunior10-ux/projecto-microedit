@@ -1,0 +1,28 @@
+server:
+  port: ${PORT:8080}
+spring:
+  application:
+    name: jcf-microcredito-api
+  datasource:
+    url: ${DATABASE_URL}
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
+  flyway:
+    enabled: true
+  sql:
+    init:
+      mode: never
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: never
+jcf:
+  security:
+    username: ${JCF_ADMIN_USER}
+    password-hash: ${JCF_ADMIN_PASSWORD_HASH}
+  cors:
+    allowed-origin: ${JCF_FRONTEND_ORIGIN:http://localhost:5173}

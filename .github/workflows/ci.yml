@@ -1,0 +1,63 @@
+name: JCF Full Stack CI
+on:
+  push:
+    branches: [feature/jcf-microcredito, main]
+  pull_request:
+    branches: [main]
+permissions:
+  contents: read
+jobs:
+  frontend:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install dependencies
+        run: npm install --no-audit --no-fund
+      - name: Run unit tests
+        run: npm test
+      - name: TypeScript and production build
+        run: npm run build
+      - name: Verify build output
+        run: test -f dist/index.html
+  backend:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: jcf_test
+          POSTGRES_PASSWORD: jcf_test_password
+          POSTGRES_DB: jcf_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd 'pg_isready -U jcf_test -d jcf_test'
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      DATABASE_URL: jdbc:postgresql://localhost:5432/jcf_test
+      DB_USER: jcf_test
+      DB_PASSWORD: jcf_test_password
+      JCF_ADMIN_USER: ci_admin
+      JCF_ADMIN_PASSWORD_HASH: '$2a$10$7EqJtq98hPqEX7fNZaFWoO.H2DgFz6yA2yA.7X6e6y9KzV7bP7eW.'
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: maven
+          cache-dependency-path: backend/pom.xml
+      - name: Compile and run backend tests
+        run: mvn -B -ntp test
