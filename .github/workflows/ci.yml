@@ -1,4 +1,4 @@
-name: JCF Frontend CI
+name: JCF Full Stack CI
 on:
   push:
     branches: [feature/jcf-microcredito, main]
@@ -28,6 +28,26 @@ jobs:
   backend:
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: jcf_test
+          POSTGRES_PASSWORD: jcf_test_password
+          POSTGRES_DB: jcf_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd 'pg_isready -U jcf_test -d jcf_test'
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      DATABASE_URL: jdbc:postgresql://localhost:5432/jcf_test
+      DB_USER: jcf_test
+      DB_PASSWORD: jcf_test_password
+      JCF_ADMIN_USER: ci_admin
+      JCF_ADMIN_PASSWORD_HASH: '$2a$10$7EqJtq98hPqEX7fNZaFWoO.H2DgFz6yA2yA.7X6e6y9KzV7bP7eW.'
     defaults:
       run:
         working-directory: backend
