@@ -30,6 +30,7 @@ public class SecurityConfig {
     c.setAllowedHeaders(List.of("Authorization", "Content-Type"));
     UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
     source.registerCorsConfiguration("/api/**", c);
+    source.registerCorsConfiguration("/actuator/health", c);
     return source;
   }
   @Bean SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
