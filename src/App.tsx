@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { NavLink, Navigate, Route, Routes, useLocation } from "react-router-dom";
-import { Activity, ArrowDownToLine, BarChart3, Bell, BriefcaseBusiness, Building2, CircleDollarSign, ClipboardList, FileSignature, HandCoins, LayoutDashboard, Menu, Search, Settings, ShieldCheck, Users, Wallet, X } from "lucide-react";
+import { Activity, ArrowDownToLine, BarChart3, Bell, Building2, CircleDollarSign, ClipboardList, FileSignature, HandCoins, LayoutDashboard, Menu, Search, Settings, ShieldCheck, Users, Wallet, X } from "lucide-react";
 import { Area, AreaChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { clientes, contratos, emprestimos, garantias, moeda, nomeCliente, pagamentos, utilizadores } from "./data";
 const links=[["/dashboard","Dashboard",LayoutDashboard],["/operacoes","Centro de operações",Activity],["/clientes","Clientes",Users],["/solicitacoes","Solicitações",ClipboardList],["/emprestimos","Empréstimos",HandCoins],["/garantias","Garantias",ShieldCheck],["/contratos","Contratos",FileSignature],["/financeiro","Financeiro",Wallet],["/cobranca","Cobrança",CircleDollarSign],["/relatorios","Relatórios",BarChart3],["/administracao","Administração",Settings]] as const;
